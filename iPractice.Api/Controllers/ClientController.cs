@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using iPractice.Domain.Interfaces;
 using iPractice.Domain.Models;
+using iPractice.Api.Data;
 
 namespace iPractice.Api.Controllers
 {
@@ -48,7 +49,7 @@ namespace iPractice.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get available time slots for client {clientId}", clientId);
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, "An unexpected error occurred on the server.");
             }
         }
 
@@ -64,7 +65,7 @@ namespace iPractice.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> CreateAppointment(
             [FromRoute] long clientId,
-            [FromBody] TimeSlot timeSlot)
+            [FromBody] TimeSlotDto timeSlot)
         {
             if (timeSlot == null)
             {
@@ -73,13 +74,13 @@ namespace iPractice.Api.Controllers
 
             try
             {
-                await _appointmentService.CreateAppointment(clientId, timeSlot);
+                await _appointmentService.CreateAppointment(clientId, new TimeSlot(timeSlot.PsychologistId, timeSlot.Start, timeSlot.End));
                 return Ok();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create appointment for client {clientId} and psychologist {psychologistId}", clientId, timeSlot.PsychologistId);
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, "An unexpected error occurred on the server.");
             }
         }
     }

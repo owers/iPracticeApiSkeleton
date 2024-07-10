@@ -8,7 +8,6 @@ namespace iPractice.Domain.Services
     /// <summary>
     /// Handles availability related operations.
     /// </summary>
-    /// todo use ardalis
     public class AvailabilityService : IAvailabilityService
     {
         private readonly IPsychologistRepository _psychologistRepository;
@@ -27,10 +26,17 @@ namespace iPractice.Domain.Services
         /// </summary>
         /// <param name="psychologistId">The psychologist's identifier.</param>
         /// <param name="availability">The availability to create.</param>
-        /// <returns>The created availability.</returns>
-        /// <exception cref="Exception">Thrown when the psychologist is not found.</exception>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="ArgumentException">Thrown when the start time is after the end time.</exception>
+        /// <exception cref="EntityNotFoundException">Thrown when the psychologist is not found.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the availability is null.</exception>
         public async Task CreateAvailability(long psychologistId, Availability availability)
         {
+            if (availability == null)
+            {
+                throw new ArgumentNullException(nameof(availability));
+            }
+
             if (availability.Start >= availability.End)
             {
                 throw new ArgumentException("Start time must be before end time");
@@ -49,8 +55,10 @@ namespace iPractice.Domain.Services
         /// <param name="psychologistId">The psychologist's identifier.</param>
         /// <param name="availabilityId">The availability's identifier.</param>
         /// <param name="availability">The availability to update.</param>
-        /// <returns>The updated availability.</returns>
-        /// <exception cref="Exception">Thrown when the psychologist is not found.</exception>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="ArgumentException">Thrown when the start time is after the end time.</exception>
+        /// <exception cref="EntityNotFoundException">Thrown when the psychologist is not found.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the availability is null.</exception>
         public async Task UpdateAvailability(long psychologistId, long availabilityId, Availability availability)
         {
             if (availability == null)

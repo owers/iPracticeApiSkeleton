@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using iPractice.Domain.Interfaces;
 using iPractice.Domain.Models;
+using iPractice.Api.Data;
 
 namespace iPractice.Api.Controllers
 {
@@ -37,7 +38,7 @@ namespace iPractice.Api.Controllers
         [HttpPost("{psychologistId}/availability")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> CreateAvailability([FromRoute] long psychologistId, [FromBody] Availability availability)
+        public async Task<ActionResult> CreateAvailability([FromRoute] long psychologistId, [FromBody] AvailabilityDto availability)
         {
             if (availability == null)
             {
@@ -46,13 +47,13 @@ namespace iPractice.Api.Controllers
 
             try
             {
-                await _availabilityHandler.CreateAvailability(psychologistId, availability);
+                await _availabilityHandler.CreateAvailability(psychologistId, new Availability(availability.Start, availability.End));
                 return Ok();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create availability for psychologist {psychologistId}", psychologistId);
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, "An unexpected error occurred on the server.");
             }
         }
 
@@ -69,7 +70,7 @@ namespace iPractice.Api.Controllers
         public async Task<ActionResult<Availability>> UpdateAvailability(
             [FromRoute] long psychologistId,
             [FromRoute] long availabilityId,
-            [FromBody] Availability availability)
+            [FromBody] AvailabilityDto availability)
         {
             if (availability == null)
             {
@@ -78,13 +79,13 @@ namespace iPractice.Api.Controllers
 
             try
             {
-                await _availabilityHandler.UpdateAvailability(psychologistId, availabilityId, availability);
+                await _availabilityHandler.UpdateAvailability(psychologistId, availabilityId, new Availability(availability.Start, availability.End));
                 return Ok(availability);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update availability {availabilityId} for psychologist {psychologistId}", availabilityId, psychologistId);
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, "An unexpected error occurred on the server.");
             }
         }
     }

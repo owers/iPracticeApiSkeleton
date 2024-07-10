@@ -5,10 +5,17 @@ using iPractice.Domain.Models;
 
 namespace iPractice.Domain.Services;
 
+/// <summary>
+/// Represents a service for managing appointments.
+/// </summary>
 public class AppointmentService : IAppointmentService
 {
     private readonly IPsychologistRepository _psychologistRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AppointmentService"/> class.
+    /// </summary>
+    /// <param name="psychologistRepository">The repository for managing psychologists.</param>
     public AppointmentService(IPsychologistRepository psychologistRepository)
     {
         _psychologistRepository = psychologistRepository;
@@ -21,6 +28,10 @@ public class AppointmentService : IAppointmentService
     /// <param name="timeSlot">The time slot for the appointment.</param>
     /// <returns>The created appointment.</returns>
     /// <exception cref="Exception">Thrown when the psychologist or client is not found.</exception>
+    /// <exception cref="ArgumentException">Thrown when the start time is after the end time.</exception>
+    /// <exception cref="EntityNotFoundException">Thrown when the psychologist or client is not found.</exception>
+    /// <exception cref="Exception">Thrown when the psychologist is not available.</exception>
+    /// <exception cref="Exception">Thrown when the booking overlaps with another booking.</exception>
     public async Task CreateAppointment(long clientId, TimeSlot timeSlot)
     {
         if (timeSlot.Start >= timeSlot.End)
@@ -77,13 +88,13 @@ public class AppointmentService : IAppointmentService
                 var nextStart = start;
                 foreach (var booking in orderedBookings.Where(booking => booking.Start > nextStart))
                 {
-                    ans.Add(new TimeSlot { Start = nextStart, End = booking.Start, PsychologistId = psychologist.Id });
+                    ans.Add(new TimeSlot(psychologist.Id, nextStart, booking.Start));
                     nextStart = booking.End;
                 }
 
                 if (end > nextStart)
                 {
-                    ans.Add(new TimeSlot { Start = nextStart, End = end, PsychologistId =psychologist.Id });
+                    ans.Add(new TimeSlot(psychologist.Id, nextStart, end));
                 }
             }
         }
@@ -108,12 +119,7 @@ public class AppointmentService : IAppointmentService
             // minimum session time
             if (slotEnd - start >= TimeSpan.FromMinutes(30))
             {
-                slots.Add(new TimeSlot
-                {
-                    Start = start,
-                    End = slotEnd,
-                    PsychologistId = timeSlot.PsychologistId
-                });
+                slots.Add(new TimeSlot(timeSlot.PsychologistId, start, slotEnd));
             }
 
             start = slotEnd;

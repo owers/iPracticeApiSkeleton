@@ -12,6 +12,7 @@ namespace iPractice.Domain.Interfaces
         /// </summary>
         /// <param name="psychologistId">The ID of the psychologist.</param>
         /// <param name="availability">The availability to create.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task CreateAvailability(long psychologistId, Availability availability);
 
         /// <summary>
@@ -20,6 +21,7 @@ namespace iPractice.Domain.Interfaces
         /// <param name="psychologistId">The ID of the psychologist.</param>
         /// <param name="availabilityId">The ID of the availability to update.</param>
         /// <param name="availability">The availability to update.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task UpdateAvailability(long psychologistId, long availabilityId, Availability availability);
     }
 }

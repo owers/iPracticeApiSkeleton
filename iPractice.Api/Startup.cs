@@ -1,6 +1,7 @@
 using iPractice.Api.Controllers;
-using iPractice.Api.Services;
 using iPractice.DataAccess;
+using iPractice.Domain.Interfaces;
+using iPractice.Domain.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,8 @@ namespace iPractice.Api
             
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Sqlite")));
             services.AddScoped<IAvailabilityService, AvailabilityService>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IPsychologistRepository, PsychologistRepository>();
             services.AddControllers();
         }
 

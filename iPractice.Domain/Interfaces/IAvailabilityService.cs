@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using iPractice.Api.Models;
+using iPractice.Domain.Models;
 
-namespace iPractice.Api.Services
+namespace iPractice.Domain.Interfaces
 {
     /// <summary>
     /// Defines the interface for the availability service.
@@ -15,20 +13,6 @@ namespace iPractice.Api.Services
         /// <param name="psychologistId">The ID of the psychologist.</param>
         /// <param name="availability">The availability to create.</param>
         Task CreateAvailability(long psychologistId, Availability availability);
-        
-        /// <summary>
-        /// Creates a new appointment for a client.
-        /// </summary>
-        /// <param name="clientId">The ID of the client.</param>
-        /// <param name="timeSlot">The time slot for the appointment.</param>
-        Task CreateAppointment(long clientId, TimeSlot timeSlot);
-
-        /// <summary>
-        /// Gets the available time slots for a client.
-        /// </summary>
-        /// <param name="clientId">The ID of the client.</param>
-        /// <returns>The available time slots for the client.</returns>
-        Task<IEnumerable<TimeSlot>> GetAvailableTimeSlots(long clientId);
 
         /// <summary>
         /// Updates an availability for a psychologist.

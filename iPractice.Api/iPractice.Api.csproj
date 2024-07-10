@@ -26,6 +26,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\iPractice.DataAccess\iPractice.DataAccess.csproj" />
+    <ProjectReference Include="..\iPractice.Domain\iPractice.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 

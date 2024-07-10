@@ -1,10 +1,10 @@
 using System.Net;
 using System.Threading.Tasks;
-using iPractice.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using iPractice.Api.Services;
 using System;
+using iPractice.Domain.Interfaces;
+using iPractice.Domain.Models;
 
 namespace iPractice.Api.Controllers
 {

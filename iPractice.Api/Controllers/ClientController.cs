@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using iPractice.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using iPractice.Api.Services;
+using iPractice.Domain.Interfaces;
+using iPractice.Domain.Models;
 
 namespace iPractice.Api.Controllers
 {
@@ -17,16 +17,16 @@ namespace iPractice.Api.Controllers
     public class ClientController : ControllerBase
     {
         private readonly ILogger<ClientController> _logger;
-        private readonly IAvailabilityService _availabilityHandler;
+        private readonly IAppointmentService _appointmentService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientController"/> class.
         /// </summary>
         /// <param name="logger">The logger instance.</param>
-        /// <param name="availabilityHandler">The availability handler instance.</param>
-        public ClientController(ILogger<ClientController> logger, IAvailabilityService availabilityHandler)
+        /// <param name="appointmentService">The appointment instance.</param>
+        public ClientController(ILogger<ClientController> logger, IAppointmentService appointmentService)
         {
-            _availabilityHandler = availabilityHandler;
+            _appointmentService = appointmentService;
             _logger = logger;
         }
 
@@ -42,7 +42,7 @@ namespace iPractice.Api.Controllers
         {
             try
             {
-                var availableTimeSlots = await _availabilityHandler.GetAvailableTimeSlots(clientId);
+                var availableTimeSlots = await _appointmentService.GetAvailableTimeSlots(clientId);
                 return new ActionResult<IEnumerable<TimeSlot>>(availableTimeSlots);
             }
             catch (Exception ex)
@@ -73,7 +73,7 @@ namespace iPractice.Api.Controllers
 
             try
             {
-                await _availabilityHandler.CreateAppointment(clientId, timeSlot);
+                await _appointmentService.CreateAppointment(clientId, timeSlot);
                 return Ok();
             }
             catch (Exception ex)

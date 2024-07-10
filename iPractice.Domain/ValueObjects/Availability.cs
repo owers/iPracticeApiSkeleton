@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iPractice.Api.Models
+﻿namespace iPractice.Domain.Models
 {
     /// <summary>
     /// Represents the availability of a psychologist.
